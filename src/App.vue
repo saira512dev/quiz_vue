@@ -1,12 +1,15 @@
 <template>
   <div id="app">
-    <Header />
+    <Header 
+      :numCorrect="numCorrect"
+      :numTotal="numTotal"
+      />
 
     <b-container class="bv-example-row">
     <b-row>
       <b-col sm="6" offset="3">    
         <QuestionBox v-if="questions.length" :currentQuestion="questions[index]"
-        :next="next" />
+        :next="next" :increment="increment " :totalQuestions="totalQuestions" :counter="index"/>
       </b-col>  
     </b-row>
   </b-container>
@@ -26,12 +29,21 @@ export default {
   data(){
     return {
       questions:{},
-      index:0
+      index:0,
+      numCorrect :0,
+      numTotal: 0,
+      totalQuestions:0
     }
   },
   methods:{
     next(){
       this.index++
+    },
+    increment(isCorrect){
+      if (isCorrect){
+        this.numCorrect++
+      }
+      this.numTotal++
     }
   },
   mounted:function(){
@@ -43,6 +55,8 @@ export default {
     })
     .then((jsonData) =>{
       this.questions = jsonData.results;
+      this.totalQuestions = this.questions.length;
+      //console.log(this.totalQuestions)
     })
   }
 }
